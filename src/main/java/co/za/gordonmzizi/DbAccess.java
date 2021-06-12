@@ -11,28 +11,21 @@ public class DbAccess {
 
         try {
             Connection connection = DriverManager.getConnection(url, userName, passwd);
-            Statement statement1 = connection.createStatement();
+            Statement statement1 = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_UPDATABLE);
             ResultSet result = statement1.executeQuery(sql);
-            ResultSetMetaData meta = result.getMetaData();
-            int row = meta.getColumnCount();
             while(result.next()){
-            for(int i = 1; i <= row; i++) {
-                System.out.println(meta.getColumnTypeName(i));
-                if (meta.getColumnTypeName(i).equals("serial")) {
-                    System.out.println(result.getInt(meta.getColumnName(i)));
-                } else if (meta.getColumnTypeName(i).equals("varchar")) {
-                    System.out.print(result.getString(meta.getColumnName(i)));
+                if(result.getString("gender").equals("Male")){
+                   result.updateString("gender","FUCK");
+                   result.updateRow();
                 }
-              }
             }
-
-
+            
             result.close();
             statement1.close();
             connection.close();
 
         }catch (SQLException e){
-            System.out.println(e.fillInStackTrace());
+            System.out.println(e.getMessage());
         }
     }
 }
